@@ -3,20 +3,13 @@ import { config } from "dotenv";
 config();
 
 // Import Discord classes
-import { Client, Message, NewsChannel } from "discord.js";
-
+import { Client, Message } from "discord.js";
 import { Parser } from "./parser";
 
-// App
-const client = new Client();
+import { Command } from "./command/command";
+import { CommandDraw } from "./command/draw";
 
-client.once("ready", () => {
-    console.log("Bot is ready!");
-});
-
-let marco = Parser.literal("marco", false).thenParse(() => Parser.literal("!").optional()).end();
-let number = Parser.number().end();
-
+// Helper functions
 function isCapitalized(string: string):boolean {
     return string.toUpperCase() == string;
 }
@@ -36,18 +29,46 @@ function takeCapitalization(input: string, capitalization: string):string {
     return output;
 }
 
+// Set up commands
+let prefix = "!";
+
+class CommandMarco implements Command {
+
+    onMessage(bot: Client, message: Message, parsed: string, args: string): void {
+        let marco = parsed.substr(prefix.length);
+        message.channel.send(takeCapitalization("Polo!", marco));
+    }
+
+}
+
+let commands:Map<string, Command> = new Map([
+    [ "marco", new CommandMarco() ],
+    [ "draw", new CommandDraw() ],
+]);
+
+// App
+const client = new Client();
+
+client.once("ready", () => {
+    console.log("Bot is ready!");
+});
+
 client.on("message", async(message: Message) => {
-    if (message.channel.type == "dm" && message.author.id !== client.user.id) {
-        let result1 = marco.parse(message.content);
-        if (result1.hasValue) {
-            message.channel.send(takeCapitalization("Polo!", message.content));
+    if (message.content.startsWith(prefix)) {
+        let commandName:string, commandArgs:string;
+
+        let index = message.content.indexOf(' ');
+        if (index == -1) {
+            commandName = message.content;
+            commandArgs = "";
         } else {
-            let result2 = number.parse(message.content);
-            if (result2.hasValue) {
-                message.channel.send("You gave me the number: " + result2.value);
-            } else {
-                message.channel.send(result2.getError());
-            }
+            commandName = message.content.substr(0, index);
+            commandArgs = message.content.substr(index + 1).trim();
+        }
+
+        let command = commands.get(commandName.substr(prefix.length).toLowerCase());
+        if (command !== undefined) {
+            command.onMessage(client, message, commandName, commandArgs);
         }
     }
 });
