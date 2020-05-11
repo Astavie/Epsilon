@@ -22,7 +22,21 @@ async function reverse(image: string) {
     return await (await Jimp.read(image)).rotate(180).getBufferAsync(Jimp.MIME_PNG);
 }
 
+let category:Command.Category = { description: "Drawing cards" };
+
 export class CommandDraw implements Command {
+
+    isValidAlias(alias: string): boolean {
+        return alias.toLowerCase() == "draw" || alias.toLowerCase() == "d";
+    }
+
+    getUsage(prefix: string): string {
+        return prefix + "draw " + decks.map(deck => deck.name.toLowerCase()).join("|") + " (unlimited)";
+    }
+
+    getCategory(): Command.Category|undefined {
+        return category;
+    }
 
     onMessage(bot: Client, message: Message, prefix:string, parsed: string, args: string): void {
         let names = decks.map(deck => deck.name.toLowerCase());
@@ -76,6 +90,18 @@ export class CommandDraw implements Command {
 }
 
 export class CommandShuffle implements Command {
+
+    isValidAlias(alias: string): boolean {
+        return alias.toLowerCase() == "shuffle" || alias.toLowerCase() == "s";
+    }
+
+    getUsage(prefix: string): string {
+        return prefix + "shuffle " + decks.map(deck => deck.name.toLowerCase()).join("|");
+    }
+
+    getCategory(): Command.Category|undefined {
+        return category;
+    }
 
     onMessage(bot: Client, message: Message, prefix:string, parsed: string, args: string): void {
         let names = decks.map(deck => deck.name.toLowerCase());

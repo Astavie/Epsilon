@@ -34,6 +34,18 @@ let prefix = "!";
 
 class CommandMarco implements Command {
 
+    getUsage(prefix: string): string {
+        return prefix + "marco"
+    }
+
+    isValidAlias(alias: string): boolean {
+        return alias.toLowerCase() == "marco";
+    }
+
+    getCategory(): Command.Category|undefined {
+        return undefined;
+    }
+
     onMessage(bot: Client, message: Message, prefix: string, parsed: string, args: string): void {
         let marco = parsed.substr(prefix.length);
         message.channel.send(takeCapitalization("Polo!", marco));
@@ -41,11 +53,16 @@ class CommandMarco implements Command {
 
 }
 
-let commands:Map<string, Command> = new Map([
-    [ "marco", new CommandMarco() ],
-    [ "draw", new CommandDraw() ],
-    [ "shuffle", new CommandShuffle() ],
-]);
+let help = new Command.Help();
+
+let commands:Command[] = [
+    new CommandMarco(),
+    new CommandDraw(),
+    new CommandShuffle(),
+    help
+];
+
+help.setCommands(commands);
 
 // App
 const client = new Client();
@@ -67,9 +84,11 @@ client.on("message", async(message: Message) => {
             commandArgs = message.content.substr(index + 1).trim();
         }
 
-        let command = commands.get(commandName.substr(prefix.length).toLowerCase());
-        if (command !== undefined) {
-            command.onMessage(client, message, prefix, commandName, commandArgs);
+        for (let command of commands) {
+            if (command.isValidAlias(commandName.substr(prefix.length))) {
+                command.onMessage(client, message, prefix, commandName, commandArgs);
+                return;
+            }
         }
     }
 });

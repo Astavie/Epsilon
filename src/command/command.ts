@@ -1,20 +1,43 @@
 
-import { Client, Message, MessageOptions, MessageAdditions } from "discord.js";
+import { Client, Message, MessageOptions, MessageAdditions, MessageEmbed } from "discord.js";
 
 export interface Command {
 
     onMessage(bot:Client, message:Message, prefix:string, parsed: string, args:string):void;
+    getUsage(prefix:string):string;
+    isValidAlias(alias:string):boolean;
+    getCategory():Command.Category|undefined;
 
 }
 
 export namespace Command {
 
+    export interface Category {
+    
+        description: string;
+    
+    }
+
     export class Branch implements Command {
 
-        commands: Map<string, Command>
+        commands: Map<string, Command>;
+        category: Category;
 
-        constructor(commands: Map<string, Command>) {
+        constructor(commands: Map<string, Command>, category: Category) {
             this.commands = commands;
+            this.category = category;
+        }
+
+        isValidAlias(alias:string): boolean {
+            return Array.from(this.commands.keys()).includes(alias.toLowerCase());
+        }
+
+        getUsage(prefix: string): string {
+            return prefix + Array.from(this.commands.keys()).join("|");
+        }
+
+        getCategory(): Category|undefined {
+            throw this.category;
         }
 
         onMessage(bot: Client, message: Message, prefix:string, parsed: string, args: string): void {
@@ -45,6 +68,65 @@ export namespace Command {
         _error(message: Message, parsed: string, error: string) {
             let keys = Array.from(this.commands.keys());
             respond(message, error + "\n`" + parsed + " " + keys.join("|") + "`");
+        }
+
+    }
+
+    export class Help implements Command {
+
+        catogories:Category[] = [];
+        commands = new Map<Category, Command[]>();
+
+        setCommands(commands:Command[]) { 
+            for (let command of commands)
+                this.addCommand(command);
+        }
+
+        addCommand(command:Command) {
+            let category = command.getCategory();
+            if (category === undefined)
+                return;
+            
+            if (!this.commands.has(category)) {
+                this.catogories.push(category);
+                this.commands.set(category, [ command ]);
+            } else {
+                this.commands.get(category).push(command);
+            }
+        }
+
+        onMessage(bot: Client, message: Message, prefix: string, parsed: string, args: string): void {
+            let embed = new MessageEmbed()
+                .setColor("#2b2bff")
+                .setTitle("Epsilon")
+                .setDescription("A random utlity bot.");
+            
+            for (let category of this.catogories) {
+                let description = "";
+
+                for (let command of this.commands.get(category)) {
+                    if (description != "") {
+                        description += "\n"
+                    }
+                    description += "`" + command.getUsage(prefix) + "`";
+                }
+
+                embed.addField(category.description, description);
+            }
+
+            respond(message, "", embed);
+        }
+
+        getUsage(prefix: string): string {
+            return prefix + "help";
+        }
+        
+        isValidAlias(alias: string): boolean {
+            return alias.toLowerCase() == "help";
+        }
+
+        getCategory(): Category {
+            return { description: "Help" };
         }
 
     }
