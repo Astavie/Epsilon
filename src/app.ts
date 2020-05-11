@@ -7,7 +7,7 @@ import { Client, Message } from "discord.js";
 import { Parser } from "./parser";
 
 import { Command } from "./command/command";
-import { CommandDraw } from "./command/draw";
+import { CommandDraw, CommandShuffle } from "./command/draw";
 
 // Helper functions
 function isCapitalized(string: string):boolean {
@@ -34,7 +34,7 @@ let prefix = "!";
 
 class CommandMarco implements Command {
 
-    onMessage(bot: Client, message: Message, parsed: string, args: string): void {
+    onMessage(bot: Client, message: Message, prefix: string, parsed: string, args: string): void {
         let marco = parsed.substr(prefix.length);
         message.channel.send(takeCapitalization("Polo!", marco));
     }
@@ -44,6 +44,7 @@ class CommandMarco implements Command {
 let commands:Map<string, Command> = new Map([
     [ "marco", new CommandMarco() ],
     [ "draw", new CommandDraw() ],
+    [ "shuffle", new CommandShuffle() ],
 ]);
 
 // App
@@ -68,7 +69,7 @@ client.on("message", async(message: Message) => {
 
         let command = commands.get(commandName.substr(prefix.length).toLowerCase());
         if (command !== undefined) {
-            command.onMessage(client, message, commandName, commandArgs);
+            command.onMessage(client, message, prefix, commandName, commandArgs);
         }
     }
 });

@@ -3,7 +3,7 @@ import { Client, Message, MessageOptions, MessageAdditions } from "discord.js";
 
 export interface Command {
 
-    onMessage(bot:Client, message:Message, parsed: string, args:string):void;
+    onMessage(bot:Client, message:Message, prefix:string, parsed: string, args:string):void;
 
 }
 
@@ -17,7 +17,7 @@ export namespace Command {
             this.commands = commands;
         }
 
-        onMessage(bot: Client, message: Message, parsed: string, args: string): void {
+        onMessage(bot: Client, message: Message, prefix:string, parsed: string, args: string): void {
             if (args == "") {
                 this._error(message, parsed, "Error: not enough arguments.");
                 return;
@@ -38,7 +38,7 @@ export namespace Command {
             if (command === undefined) {
                 this._error(message, parsed, "Error: incorrect argument.");
             } else {
-                command.onMessage(bot, message, parsed + " " + commandName, commandArgs);
+                command.onMessage(bot, message, prefix, parsed + " " + commandName, commandArgs);
             }
         }
 
