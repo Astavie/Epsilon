@@ -53,9 +53,41 @@ class CommandMarco implements Command {
 
 }
 
+class CommandPrefix implements Command {
+
+    async onMessage(bot: Client, message: Message, _prefix: string, parsed: string, args: string): Promise<void> {
+        if (message.author.id != "216949091173662722" && message.author.id != "95206863083143168") { // Astavie and Thauma'
+            return;
+        }
+
+        let p = Command.getArgument(message, parsed, "prefix", args, 0);
+        if (p === undefined) {
+            return;
+        }
+
+        Command.respond(message, "Command prefix is set to " + p);
+
+        prefix = p;
+    }
+
+    getUsage(prefix: string): string {
+        return prefix + "prefix <prefix>"
+    }
+
+    isValidAlias(alias: string): boolean {
+        return alias.toLowerCase() == "prefix";
+    }
+
+    getCategory(): Command.Category {
+        return undefined;
+    }
+
+}
+
 let help = new Command.Help();
 
 let commands:Command[] = [
+    new CommandPrefix(),
     new CommandMarco(),
     new CommandDraw(),
     new CommandShuffle(),
@@ -90,6 +122,8 @@ client.on("message", async(message: Message) => {
                 return;
             }
         }
+    } else if (message.mentions.has(client.user)) {
+        Command.respond(message, "`" + prefix + "help`");
     }
 });
 
