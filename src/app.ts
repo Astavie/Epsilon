@@ -9,6 +9,15 @@ import { Parser } from "./parser";
 import { Command } from "./command/command";
 import { CommandDraw, CommandShuffle } from "./command/draw";
 
+// Database
+import lowdb from "lowdb";
+import { default as FileSync } from "lowdb/adapters/FileSync";
+
+const adapter = new FileSync("db.json");
+let db = lowdb(adapter);
+
+db.defaults({ defaultPrefix: "%", prefixes: {} }).write();
+
 // Helper functions
 function isCapitalized(string: string):boolean {
     return string.toUpperCase() == string;
@@ -30,8 +39,6 @@ function takeCapitalization(input: string, capitalization: string):string {
 }
 
 // Set up commands
-let prefix = "!";
-
 class CommandMarco implements Command {
 
     getUsage(prefix: string): string {
@@ -65,9 +72,14 @@ class CommandPrefix implements Command {
             return;
         }
 
-        Command.respond(message, "Command prefix is set to " + p);
+        Command.respond(message, "The command prefix has been set to " + p);
 
-        prefix = p;
+        let id = message.channel.type == "dm" ? message.channel.id : message.guild.id;
+        if (p == db.get('defaultPrefix').value()) {
+            db.unset('prefixes.' + id).write();
+        } else {
+            db.set('prefixes.' + id, p).write();
+        }
     }
 
     getUsage(prefix: string): string {
@@ -104,6 +116,9 @@ client.once("ready", () => {
 });
 
 client.on("message", async(message: Message) => {
+    let id = message.channel.type == "dm" ? message.channel.id : message.guild.id;
+    let prefix:string = db.has('prefixes.' + id).value() ? db.get('prefixes.' + id).value() : db.get('defaultPrefix').value();
+
     if (message.content.startsWith(prefix)) {
         let commandName:string, commandArgs:string;
 

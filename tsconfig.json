@@ -3,7 +3,8 @@
         "target": "ESNext",
         "module": "commonjs",
         "outDir": "build",
-        "sourceMap": false
+        "sourceMap": false,
+        "esModuleInterop": true
     },
     "include": [
         "src/**/*.ts"
