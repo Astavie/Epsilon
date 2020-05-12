@@ -4,7 +4,7 @@ import { Command } from "./command";
 import { Deck, DeckInstance } from "../deck";
 import Jimp = require("jimp");
 
-let decks:Deck[] = [ Deck.Tarot ];
+let decks:Deck[] = [ Deck.Tarot, Deck.Standard ];
 let instances = new Map<string, Map<string, DeckInstance>>();
 
 function getInstance(id:string, deck:Deck):DeckInstance {
@@ -38,7 +38,7 @@ export class CommandDraw implements Command {
         return category;
     }
 
-    onMessage(bot: Client, message: Message, prefix:string, parsed: string, args: string): void {
+    async onMessage(bot: Client, message: Message, prefix:string, parsed: string, args: string): Promise<void> {
         let names = decks.map(deck => deck.name.toLowerCase());
         let suffix = names.join("|") + " (unlimited)";
 
@@ -81,7 +81,8 @@ export class CommandDraw implements Command {
             } else {
                 left = " (reversed)";
             }
-            reverse(card.image).then(buffer => Command.respond(message, "You drew " + card.name + left + ".", new MessageAttachment(buffer)));
+            let buffer = await reverse(card.image);
+            Command.respond(message, "You drew " + card.name + left + ".", new MessageAttachment(buffer));
         } else {
             Command.respond(message, "You drew " + card.name + left + ".", { files: [ card.image ]});
         }
@@ -103,7 +104,7 @@ export class CommandShuffle implements Command {
         return category;
     }
 
-    onMessage(bot: Client, message: Message, prefix:string, parsed: string, args: string): void {
+    async onMessage(bot: Client, message: Message, prefix:string, parsed: string, args: string): Promise<void> {
         let names = decks.map(deck => deck.name.toLowerCase());
         let suffix = names.join("|");
 

@@ -46,7 +46,7 @@ class CommandMarco implements Command {
         return undefined;
     }
 
-    onMessage(bot: Client, message: Message, prefix: string, parsed: string, args: string): void {
+    async onMessage(bot: Client, message: Message, prefix: string, parsed: string, args: string): Promise<void> {
         let marco = parsed.substr(prefix.length);
         message.channel.send(takeCapitalization("Polo!", marco));
     }

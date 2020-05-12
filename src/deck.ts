@@ -110,6 +110,76 @@ export namespace Deck {
         ]
     };
 
+    export const Standard:Deck = {
+        name: "Standard",
+        canBeReversed: false,
+        cards: [
+            // Clubs
+            { name: "Ace of Clubs",   image: "./assets/cards/ace_of_clubs.png"   },
+            { name: "Two of Clubs",   image: "./assets/cards/2_of_clubs.png"     },
+            { name: "Three of Clubs", image: "./assets/cards/3_of_clubs.png"     },
+            { name: "Four of Clubs",  image: "./assets/cards/4_of_clubs.png"     },
+            { name: "Five of Clubs",  image: "./assets/cards/5_of_clubs.png"     },
+            { name: "Six of Clubs",   image: "./assets/cards/6_of_clubs.png"     },
+            { name: "Seven of Clubs", image: "./assets/cards/7_of_clubs.png"     },
+            { name: "Eight of Clubs", image: "./assets/cards/8_of_clubs.png"     },
+            { name: "Nine of Clubs",  image: "./assets/cards/9_of_clubs.png"     },
+            { name: "Ten of Clubs",   image: "./assets/cards/10_of_clubs.png"    },
+            { name: "Jack of Clubs",  image: "./assets/cards/jack_of_clubs.png"  },
+            { name: "Queen of Clubs", image: "./assets/cards/queen_of_clubs.png" },
+            { name: "King of Clubs",  image: "./assets/cards/king_of_clubs.png"  },
+
+            // Diamonds
+            { name: "Ace of Diamonds",   image: "./assets/cards/ace_of_diamonds.png"   },
+            { name: "Two of Diamonds",   image: "./assets/cards/2_of_diamonds.png"     },
+            { name: "Three of Diamonds", image: "./assets/cards/3_of_diamonds.png"     },
+            { name: "Four of Diamonds",  image: "./assets/cards/4_of_diamonds.png"     },
+            { name: "Five of Diamonds",  image: "./assets/cards/5_of_diamonds.png"     },
+            { name: "Six of Diamonds",   image: "./assets/cards/6_of_diamonds.png"     },
+            { name: "Seven of Diamonds", image: "./assets/cards/7_of_diamonds.png"     },
+            { name: "Eight of Diamonds", image: "./assets/cards/8_of_diamonds.png"     },
+            { name: "Nine of Diamonds",  image: "./assets/cards/9_of_diamonds.png"     },
+            { name: "Ten of Diamonds",   image: "./assets/cards/10_of_diamonds.png"    },
+            { name: "Jack of Diamonds",  image: "./assets/cards/jack_of_diamonds.png"  },
+            { name: "Queen of Diamonds", image: "./assets/cards/queen_of_diamonds.png" },
+            { name: "King of Diamonds",  image: "./assets/cards/king_of_diamonds.png"  },
+
+            // Hearts
+            { name: "Ace of Hearts",   image: "./assets/cards/ace_of_hearts.png"   },
+            { name: "Two of Hearts",   image: "./assets/cards/2_of_hearts.png"     },
+            { name: "Three of Hearts", image: "./assets/cards/3_of_hearts.png"     },
+            { name: "Four of Hearts",  image: "./assets/cards/4_of_hearts.png"     },
+            { name: "Five of Hearts",  image: "./assets/cards/5_of_hearts.png"     },
+            { name: "Six of Hearts",   image: "./assets/cards/6_of_hearts.png"     },
+            { name: "Seven of Hearts", image: "./assets/cards/7_of_hearts.png"     },
+            { name: "Eight of Hearts", image: "./assets/cards/8_of_hearts.png"     },
+            { name: "Nine of Hearts",  image: "./assets/cards/9_of_hearts.png"     },
+            { name: "Ten of Hearts",   image: "./assets/cards/10_of_hearts.png"    },
+            { name: "Jack of Hearts",  image: "./assets/cards/jack_of_hearts.png"  },
+            { name: "Queen of Hearts", image: "./assets/cards/queen_of_hearts.png" },
+            { name: "King of Hearts",  image: "./assets/cards/king_of_hearts.png"  },
+
+            // Spades
+            { name: "Ace of Spades",   image: "./assets/cards/ace_of_spades.png"   },
+            { name: "Two of Spades",   image: "./assets/cards/2_of_spades.png"     },
+            { name: "Three of Spades", image: "./assets/cards/3_of_spades.png"     },
+            { name: "Four of Spades",  image: "./assets/cards/4_of_spades.png"     },
+            { name: "Five of Spades",  image: "./assets/cards/5_of_spades.png"     },
+            { name: "Six of Spades",   image: "./assets/cards/6_of_spades.png"     },
+            { name: "Seven of Spades", image: "./assets/cards/7_of_spades.png"     },
+            { name: "Eight of Spades", image: "./assets/cards/8_of_spades.png"     },
+            { name: "Nine of Spades",  image: "./assets/cards/9_of_spades.png"     },
+            { name: "Ten of Spades",   image: "./assets/cards/10_of_spades.png"    },
+            { name: "Jack of Spades",  image: "./assets/cards/jack_of_spades.png"  },
+            { name: "Queen of Spades", image: "./assets/cards/queen_of_spades.png" },
+            { name: "King of Spades",  image: "./assets/cards/king_of_spades.png"  },
+
+            // Jokers
+            { name: "Joker", image: "./assets/cards/black_joker.png" },
+            { name: "Joker", image: "./assets/cards/red_joker.png"   }
+        ]
+    }
+
 }
 
 export class DeckInstance {

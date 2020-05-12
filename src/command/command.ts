@@ -3,7 +3,7 @@ import { Client, Message, MessageOptions, MessageAdditions, MessageEmbed } from 
 
 export interface Command {
 
-    onMessage(bot:Client, message:Message, prefix:string, parsed: string, args:string):void;
+    onMessage(bot:Client, message:Message, prefix:string, parsed: string, args:string):Promise<void>;
     getUsage(prefix:string):string;
     isValidAlias(alias:string):boolean;
     getCategory():Command.Category|undefined;
@@ -40,7 +40,7 @@ export namespace Command {
             throw this.category;
         }
 
-        onMessage(bot: Client, message: Message, prefix:string, parsed: string, args: string): void {
+        async onMessage(bot: Client, message: Message, prefix:string, parsed: string, args: string): Promise<void> {
             if (args == "") {
                 this._error(message, parsed, "Error: not enough arguments.");
                 return;
@@ -95,10 +95,11 @@ export namespace Command {
             }
         }
 
-        onMessage(bot: Client, message: Message, prefix: string, parsed: string, args: string): void {
+        async onMessage(bot: Client, message: Message, prefix: string, parsed: string, args: string): Promise<void> {
             let embed = new MessageEmbed()
                 .setColor("#2b2bff")
                 .setTitle("Epsilon")
+                .setURL("https://github.com/Astavie/Epsilon")
                 .setDescription("A random utlity bot.");
             
             for (let category of this.catogories) {
